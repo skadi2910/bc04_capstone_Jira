@@ -20,8 +20,6 @@ export default function MenuCyberbugs() {
                     //! chưa hiểu tại sao phải có trang này
                     <div>
                         <i className=" mr-1 fa fa-credit-card" />
-
-
                         <NavLink
                             className="text-dark"
                             activeClassName="active font-weight-bold"
