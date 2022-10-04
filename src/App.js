@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Home from "./components/Cyberbugs/Home";
+import Loading from "./components/Loading/Loading";
 import CreateProject from "./pages/Cyberbugs/CreateProject/CreateProject";
 import ProjectDetail from "./pages/Cyberbugs/ProjectDetail/ProjectDetail";
 import ProjectManagement from "./pages/Cyberbugs/ProjectManagement/ProjectManagement";
@@ -12,9 +13,11 @@ import Signup from "./pages/User/Signup/Signup";
 // import AdminTemplate from "./templates/AdminTemplate/AdminTemplate";
 import CyberBugsTemplate from "./templates/CyberBugsTemplate/CyberBugsTemplate";
 import UserTemplate from "./templates/UserTemplate/UserTemplate";
+let history = createBrowserHistory();
 function App() {
   return (
     <div className="App">
+      <Loading />
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<CyberBugsTemplate Component={ProjectManagement} />} />

@@ -1,31 +1,66 @@
-import { message } from "antd";
+import { Input, message } from "antd";
 import React from "react";
 import { NavLink } from "react-router-dom";
-
-// import { Button, Checkbox, Form, Input } from 'antd';
+import { useFormik } from 'formik';
+import * as Yup from "yup";
+import { useDispatch } from "react-redux";
+import { setLoadingOnAction } from "../../../redux/actions/LoadingAction";
+import { loginAction } from "./../../../redux/actions/LoginAction";
 export default function Login() {
+    const dispatch = useDispatch();
+    const LoginSchema = Yup.object().shape({
+        email: Yup.string().email('Email chưa đúng định dạng rồi nà').required('Vui lòng nhập email'),
+        passWord: Yup.string().required("Vui lòng nhập mật khẩu")
+    });
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            passWord: ''
+        },
+        validationSchema: LoginSchema,
+        onSubmit: values => {
+            // alert(JSON.stringify(values, null, 2));
+            // console.log("values", values);
+            dispatch(loginAction(values));
+        },
+    });
     return (
         <form
             onSubmit={(event) => {
                 event.preventDefault();
+                formik.handleSubmit();
             }}
+            className="pb-8"
         >
             <h1 className="text-center text-3xl pb-8 font-bold ">Đăng nhập</h1>
             {/* Email input */}
             <div className="mb-6">
-                <input
+                <Input
+                    // onChange={formik}
+                    onChange={formik.handleChange}
+                    name="email"
                     type="text"
-                    className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                    className="px-4 py-2 "
+                    // className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     placeholder="Email "
                 />
+                {formik.errors.email && formik.touched.email && (
+                    <p className="text-red-500">{formik.errors.email}</p>
+                )}
             </div>
             {/* Password input */}
-            <div className="mb-2 sm:mb-8 lg:mb-8 xl:mb-8 2xl:mb-8">
-                <input
+            <div className="mb-0 sm:mb-4 lg:mb-4 xl:mb-4 2xl:mb-4">
+                <Input.Password
+                    onChange={formik.handleChange}
+                    name="passWord"
                     type="password"
-                    className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
+                    className="px-4 py-2 "
+                    // className="form-control block w-full px-4 py-2 text-xl font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
                     placeholder="Mật khẩu"
                 />
+                {formik.errors.passWord && formik.touched.passWord && (
+                    <p className="text-red-500">{formik.errors.passWord}</p>
+                )}
             </div>
             <div className="flex justify-between items-center mb-6">
                 <div className="form-group form-check">
@@ -44,7 +79,7 @@ export default function Login() {
                 </div>
                 <NavLink
                     to="/signup"
-                    className="pt-8 sm:py-0 lg:py-0 xl:py-0 2xl:py-0 text-blue-600  hover:text-blue-700 focus:text-blue-700 active:text-blue-800 duration-200 transition ease-in-out">
+                    className="pt-10 sm:py-0 lg:py-0 xl:py-0 2xl:py-0 text-blue-600  hover:text-blue-700 focus:text-blue-700 active:text-blue-800 duration-200 transition ease-in-out">
                     Bạn chưa có tài khoản?
                 </NavLink>
             </div>
@@ -100,7 +135,6 @@ export default function Login() {
                     viewBox="0 0 512 512"
                     className="w-3.5 h-3.5 mr-2"
                 >
-                    {/*! Font Awesome Pro 6.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. */}
                     <path
                         fill="currentColor"
                         d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
