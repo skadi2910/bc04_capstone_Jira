@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
+import "./styles/customCss/allStyle.jsx"
 import Home from "./components/Cyberbugs/Home";
 import Loading from "./components/Loading/Loading";
 import CreateProject from "./pages/Cyberbugs/CreateProject/CreateProject";
@@ -13,12 +14,14 @@ import Signup from "./pages/User/Signup/Signup";
 // import AdminTemplate from "./templates/AdminTemplate/AdminTemplate";
 import CyberBugsTemplate from "./templates/CyberBugsTemplate/CyberBugsTemplate";
 import UserTemplate from "./templates/UserTemplate/UserTemplate";
-let history = createBrowserHistory();
+import { createBrowserHistory } from "history";
+import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
+export const history = createBrowserHistory({ window });
 function App() {
   return (
-    <div className="App">
+    < >
       <Loading />
-      <BrowserRouter>
+      <HistoryRouter history={history}>
         <Routes>
           <Route path='/' element={<CyberBugsTemplate Component={ProjectManagement} />} />
           <Route path='/projectmanagement' element={<CyberBugsTemplate Component={ProjectManagement} />} />
@@ -27,11 +30,9 @@ function App() {
           <Route path='/usermanagement' element={<CyberBugsTemplate Component={UserManagement} />} />
           <Route path='/login' element={<UserTemplate Component={Login} />} />
           <Route path='/signup' element={<UserTemplate Component={Signup} />} />
-
-          {/* <Route path='/admin' element={<AdminTemplate Component={Admin} />} /> */}
         </Routes>
-      </BrowserRouter>
-    </div>
+      </HistoryRouter>
+    </>
   )
 }
 

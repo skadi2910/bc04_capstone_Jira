@@ -19,8 +19,6 @@ export default function Login() {
         },
         validationSchema: LoginSchema,
         onSubmit: values => {
-            // alert(JSON.stringify(values, null, 2));
-            // console.log("values", values);
             dispatch(loginAction(values));
         },
     });
@@ -71,8 +69,8 @@ export default function Login() {
                         id="exampleCheck3"
                     />
                     <label
-                        className="form-check-label inline-block text-gray-800"
-                        htmlFor="exampleCheck2"
+                        className="form-check-label inline-block text-gray-800 cursor-pointer"
+                        htmlFor="exampleCheck3"
                     >
                         Ghi nhớ đăng nhập
                     </label>
@@ -101,9 +99,10 @@ export default function Login() {
                 }}
                 className="px-7 py-3 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full flex justify-center items-center mb-3"
                 style={{ backgroundColor: "#3b5998" }}
-                role="button"
-                data-mdb-ripple="true"
-                data-mdb-ripple-color="light"
+                type="button"
+            // role="button"
+            // data-mdb-ripple="true"
+            // data-mdb-ripple-color="light"
             >
                 {/* Facebook */}
                 <svg
@@ -125,9 +124,10 @@ export default function Login() {
                 }}
                 className="px-7 py-3 text-white font-medium text-sm leading-snug uppercase rounded shadow-md hover:shadow-lg focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg transition duration-150 ease-in-out w-full flex justify-center items-center"
                 style={{ backgroundColor: "#55acee" }}
-                role="button"
-                data-mdb-ripple="true"
-                data-mdb-ripple-color="light"
+                type="button"
+            // role="button"
+            // data-mdb-ripple="true"
+            // data-mdb-ripple-color="light"
             >
                 {/* Twitter */}
                 <svg

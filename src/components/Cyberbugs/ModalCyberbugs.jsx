@@ -4,9 +4,11 @@ export default function ModalCyberbugs() {
     const [open, setOpen] = useState(false);
     return (
         <>
+            {/*
+            //! nút mở modal nếu có dùng
             <Button type="primary" onClick={() => setOpen(!open)}>
                 Open Modal of 1000px width
-            </Button>
+            </Button> */}
             <Modal
                 title="Modal 1000px width"
                 centered

@@ -9,7 +9,9 @@ export class baseService {
             method: 'PUT',
             data: model,
             headers: {
-                // TokenCybersoft: TOKEN_CYBERSOFT
+                Authorization: "Bearer " + localStorage.getItem(TOKEN)
+                ,
+                TokenCybersoft: TOKEN_CYBERSOFT
             }
         })
     }
@@ -22,9 +24,9 @@ export class baseService {
             data: model,
             headers:
             {
-                // Authorization: "Bearer " + localStorage.getItem(TOKEN)
-                // ,
-                // TokenCybersoft: TOKEN_CYBERSOFT
+                Authorization: "Bearer " + localStorage.getItem(TOKEN)
+                ,
+                TokenCybersoft: TOKEN_CYBERSOFT
             }
 
         })
@@ -36,7 +38,9 @@ export class baseService {
             url: `${DOMAIN}/${url}`,
             method: 'GET',
             headers: {
-                // TokenCybersoft: TOKEN_CYBERSOFT
+                Authorization: "Bearer " + localStorage.getItem(TOKEN)
+                ,
+                TokenCybersoft: TOKEN_CYBERSOFT
             }
         })
     }
@@ -47,9 +51,9 @@ export class baseService {
             method: 'DELETE',
             headers:
             {
-                // Authorization: "Bearer " + localStorage.getItem(TOKEN)
-                // ,
-                // TokenCybersoft: TOKEN_CYBERSOFT
+                Authorization: "Bearer " + localStorage.getItem(TOKEN)
+                ,
+                TokenCybersoft: TOKEN_CYBERSOFT
             }
         })
     }
