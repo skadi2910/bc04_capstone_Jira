@@ -1,7 +1,10 @@
 import { Button, Modal } from 'antd';
 import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { closeModalAction } from '../../redux/actions/ModalAction';
 export default function ModalCyberbugs() {
-    const [open, setOpen] = useState(false);
+    const { modalState, defaultComponent } = useSelector(state => state.ModalReducer);
+    const dispatch = useDispatch();
     return (
         <>
             {/*
@@ -10,16 +13,19 @@ export default function ModalCyberbugs() {
                 Open Modal of 1000px width
             </Button> */}
             <Modal
-                title="Modal 1000px width"
                 centered
-                open={open}
-                onOk={() => setOpen(false)}
-                onCancel={() => setOpen(false)}
+                open={modalState}
+                // onOk={() => {
+                //     dispatch(closeModalAction());
+                // }}
+                onCancel={() => {
+                    dispatch(closeModalAction());
+                }}
+
                 width={1000}
+                footer={null}
             >
-                <p>some contents...</p>
-                <p>some contents...</p>
-                <p>some contents...</p>
+                {defaultComponent}
             </Modal>
         </>
     )

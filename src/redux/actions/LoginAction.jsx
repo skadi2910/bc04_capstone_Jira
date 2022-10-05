@@ -29,7 +29,7 @@ export const loginAction = (loginInfor) => {
         }
     };
 };
-export const signupAction = (signupInfo) => {
+export const signupAction = (signupInfo, isUserSignup = true) => {
     return async (dispatch) => {
         dispatch(setLoadingOnAction());
         try {
@@ -40,6 +40,9 @@ export const signupAction = (signupInfo) => {
                 const loginInfo = { email, passWord };
                 message.success("Đăng ký thành công, đang đăng nhập", 2);
                 setTimeout(() => {
+                    if (!isUserSignup) {
+                        return history.push("/usermanagement");
+                    }
                     dispatch(loginAction(loginInfo));
                 }, 2000);
             }

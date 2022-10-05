@@ -29,13 +29,8 @@ export default function Signup() {
         validationSchema: SignupSchema,
         onSubmit: values => {
             dispatch(signupAction(values));
-            // console.log('values: ', values);
-            // alert(JSON.stringify(values, null, 2));
-            // console.log("values", values);
-            // dispatch(loginAction(values));
         },
     });
-    // console.log(formik.errors);
     return (
 
         <div className="bg-grey-lighter min-h-screen flex flex-col text">

@@ -1,10 +1,30 @@
-import React from "react";
+import React, { useRef } from "react";
+import { useDispatch } from "react-redux";
+import { getUserListAction } from "../../../redux/actions/UserAction";
 
 export default function Search() {
-    return (
-        <form className="mb-8"
+    const dispatch = useDispatch();
+    const searchRef = useRef(null);
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const { value } = event.target;
+        if (value) return dispatch(getUserListAction(value, true));
+        return dispatch(getUserListAction("", true));
 
-        >
+    };
+    // ! logic: SEARCH: user nhập kí tự ==> lấy kí tự ==> dispatch action getUserList với kí tự đó
+    const handleSearh = (event) => {
+        const { value } = event.target;
+        if (searchRef.current) {
+            clearTimeout(searchRef.current);
+        }
+        searchRef.current = setTimeout(() => {
+            dispatch(getUserListAction(value, true));
+        }, 300);
+    };
+
+    return (
+        <form className="mb-8" onSubmit={handleSubmit}>
             <label
                 htmlFor="default-search"
                 className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-gray-300"
@@ -30,14 +50,14 @@ export default function Search() {
                     </svg>
                 </div>
                 <input
+                    onChange={handleSearh}
                     style={{
-                        outline: "unset"
+                        outline: "unset",
                     }}
                     type="search"
                     id="default-search"
                     className="block p-4 pl-10 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     placeholder="Tìm tên người dùng"
-                    required
                 />
                 <button
                     type="submit"

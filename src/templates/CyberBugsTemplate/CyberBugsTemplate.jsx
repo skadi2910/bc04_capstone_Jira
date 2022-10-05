@@ -59,7 +59,7 @@ export default function CyberBugsTemplate(props) {
             <SidebarCyberbugs />
 
             {/* <MenuCyberbugs /> */}
-            <Layout className='items-center'>
+            <Layout >
                 <HeaderCyberbugs />
                 <ModalCyberbugs />
                 <Component />
