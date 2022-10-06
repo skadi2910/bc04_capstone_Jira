@@ -4,6 +4,7 @@ import HeaderProjectDetail from "./HeaderProjectDetail/HeaderProjectDetail";
 import background from "../../../assets/img/bgProjectDetail.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { selectedKeyAction } from "../../../redux/actions/SelectKeyAction";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import {
     DragOutlined,
     SmallDashOutlined,
@@ -25,124 +26,122 @@ export default function ProjectDetail() {
         dispatch(getProjectDetailAction(id));
     }, []);
     const key = -1;
+    const handleDragEnd = (result) => {
+        console.log("result: ", result);
+    };
     const renderListTask = () => {
         console.log(lstTask);
-        return lstTask?.map((task, index) => {
-            return (
-                <div
-                    key={index.toString() + task.statusId}
-                    className="glassMorphismBackground rounded-lg "
-                >
-                    <div
-                        className="task-header px-3 py-3 min-h-[3.5rem] lg:min-h-[5rem] "
-                    >
-                        <div className="flex justify-between">
-                            <p className="text-xs lg:text-base 2xl:text-lg font-bold">
-                                {task.statusName}
-                            </p>
-                            <div className="pr-2">
-                                <SmallDashOutlined className="custom-hover-icon p-2 rounded-lg" />
-                            </div>
-                        </div>
-                    </div>
-                    {task.lstTaskDeTail?.map((taskDetail, index) => {
-                        let priorityClass = ``;
-                        switch (taskDetail.priorityTask.priorityId) {
-                            case 1:
-                                priorityClass = `text-red-600`;
-                                break;
-                            case 2:
-                                priorityClass = `text-yellow-600`;
 
-                                break;
-                            case 3:
-                                priorityClass = `text-green-600`;
+        return (
+            <DragDropContext onDragEnd={handleDragEnd}>
+                {lstTask?.map((task, index) => {
+                    return (
+                        <Droppable
+                            key={index}
+                            droppableId={task.statusId}>
+                            {(provided) => {
+                                return (
+                                    <div className=" rounded-lg ">
+                                        <div className="task-header glassMorphismBackground px-3 py-3 min-h-[3.5rem] lg:min-h-[5rem] ">
+                                            <div className="flex justify-between">
+                                                <p className="text-xs lg:text-base 2xl:text-lg font-bold">
+                                                    {task.statusName}
+                                                </p>
+                                                <div className="pr-2">
+                                                    <SmallDashOutlined className="custom-hover-icon p-2 rounded-lg" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <ul
+                                            className="h-full"
+                                            {...provided.droppableProps}
+                                            ref={provided.innerRef}
+                                            key={index.toString() + task.statusId}
+                                        >
+                                            {task.lstTaskDeTail?.map((taskDetail, indexDetail) => {
+                                                let priorityClass = ``;
+                                                switch (taskDetail.priorityTask.priorityId) {
+                                                    case 1:
+                                                        priorityClass = `text-red-600`;
+                                                        break;
+                                                    case 2:
+                                                        priorityClass = `text-yellow-600`;
 
-                                break;
-                            case 4:
-                                priorityClass = `text-blue-600`;
+                                                        break;
+                                                    case 3:
+                                                        priorityClass = `text-green-600`;
 
-                                break;
+                                                        break;
+                                                    case 4:
+                                                        priorityClass = `text-blue-600`;
 
-                            default:
-                                break;
-                        }
-                        return (
-                            <div className="task-body rounded-md bodyTaskGlassMorphismm text-black  font-semibold  px-4 py-2  mx-2 my-3">
-                                <div className="grid grid-cols-4 my-2">
-                                    <div className="col-span-3">
-                                        <p className="text-xs  lg:text-base">
-                                            {taskDetail.taskName}
-                                        </p>
-                                    </div>
-                                    <div className="col-span-1 text-end pr-2">
-                                        <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                    </div>
-                                </div>
-                                <div className="flex justify-between mt-4">
-                                    <div className={`text-xs lg:text-base  ${priorityClass}`}>
-                                        {taskDetail.priorityTask.priority}
-                                    </div>
-                                    <div>
-                                        <div className="flex items-center gap-2">
-                                            {taskDetail.assigness?.map((person, index) => {
+                                                        break;
+
+                                                    default:
+                                                        break;
+                                                }
                                                 return (
-                                                    <img
-                                                        style={{ borderRadius: "50%" }}
-                                                        className=" h-4 w-4 lg:h-8 lg:w-8  bodyTaskGlassMorphismm"
-                                                        src={person.avatar}
-                                                        alt="ok"
-                                                    />
+                                                    <Draggable
+                                                        key={taskDetail.taskId.toString()}
+                                                        draggableId={taskDetail.taskId.toString()}
+                                                        index={indexDetail}
+                                                    >
+                                                        {(provided) => (
+                                                            <li
+                                                                {...provided.draggableProps}
+                                                                {...provided.dragHandleProps}
+                                                                ref={provided.innerRef}
+                                                                className="task-body bodyTaskGlassMorphismm rounded-md  text-black  font-semibold  px-4 py-2  mx-2 my-3"
+                                                            >
+                                                                <div className="grid grid-cols-4 my-2">
+                                                                    <div className="col-span-3">
+                                                                        <p className="text-xs  lg:text-base">
+                                                                            {taskDetail.taskName}
+                                                                        </p>
+                                                                    </div>
+                                                                    <div className="col-span-1 text-end pr-2">
+                                                                        <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="flex justify-between mt-4">
+                                                                    <div
+                                                                        className={`text-xs lg:text-base ${priorityClass} `}
+                                                                    >
+                                                                        {taskDetail.priorityTask.priority}
+                                                                    </div>
+                                                                    <div>
+                                                                        <div className="flex items-center gap-2">
+                                                                            {taskDetail.assigness?.map(
+                                                                                (person, index) => {
+                                                                                    return (
+                                                                                        <img
+                                                                                            style={{ borderRadius: "50%" }}
+                                                                                            className="bodyTaskGlassMorphismm h-4 w-4 lg:h-8 lg:w-8  "
+                                                                                            src={person.avatar}
+                                                                                            alt="ok"
+                                                                                        />
+                                                                                    );
+                                                                                }
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        )}
+                                                    </Draggable>
                                                 );
                                             })}
-                                            {/* <img
-                                                    className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                                    src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-                                                    alt=""
-                                                />
-                                                <img
-                                                    className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                                    src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-                                                    alt=""
-                                                /> */}
-                                        </div>
+                                            {provided.placeholder}
+                                        </ul>
                                     </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            );
-        });
+                                );
+                            }}
+                        </Droppable>
+                    );
+                })}
+            </DragDropContext>
+        );
     };
-    // <div className="task-body bodyTaskGlassMorphismm text-black  font-semibold  px-3 py-2 mx-2 my-3">
-    //     <div className="grid grid-cols-4 my-2">
-    //         <div className="col-span-3">
-    //             <p className="text-xs  lg:text-base">Quản lý các dự án ( project management hoặc index )</p>
-    //         </div>
-    //         <div className="col-span-1 text-end pr-2">
-    //             <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
-    //         </div>
-    //     </div>
-    //     <div className="flex justify-between mt-4">
-    //         <div className="text-xs lg:text-base">Trạng thái</div>
-    //         <div>
-    //             <div className="flex items-center gap-2">
-    //                 <img
-    //                     className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-    //                     src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-    //                     alt=""
-    //                 />
-    //                 <img
-    //                     className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-    //                     src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-    //                     alt=""
-    //                 />
-    //             </div>
-    //         </div>
-    //     </div>
-    // </div>
-
     return (
         <div className="mx-auto xl:-mx-0">
             <div
