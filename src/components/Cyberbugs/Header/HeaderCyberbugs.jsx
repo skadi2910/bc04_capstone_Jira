@@ -110,7 +110,6 @@ export default function HeaderCyberbugs() {
                     mode="horizontal"
                     items={items}
                 />
-                ;
             </div>
         </div>
     );
