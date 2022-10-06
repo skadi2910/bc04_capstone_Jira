@@ -50,8 +50,8 @@ export default function TableComponent() {
             key: "avatar",
             render: (text, record, index) => {
                 return (
-                    <div>
-                        <img src={text} alt="" />
+                    <div className="flex justify-center">
+                        <img src={text} alt="image" />
                     </div>
                 );
             },
