@@ -1,13 +1,22 @@
 import { message } from "antd";
 import { projectService } from "../../services/ProjectService";
 import { setLoadingOffAction, setLoadingOnAction } from "./LoadingAction";
-import { GET_PROJECT_DETAIL } from "./types/ProjectTypes";
+import { EDIT_PROJECT_DETAIL, GET_PROJECT_DETAIL } from "./types/ProjectTypes";
 const getProjectDetailCreator = (projectDetail) => {
     return ({
         type: GET_PROJECT_DETAIL,
         projectDetail
     })
 }
+export const editProjectDetailCreator = (arrayEdited) => {
+    return ({
+        type: EDIT_PROJECT_DETAIL,
+        arrayEdited
+    })
+}
+
+
+
 export const getProjectDetailAction = (projectID) => {
     return async (dispatch) => {
         dispatch(setLoadingOnAction());
@@ -22,8 +31,19 @@ export const getProjectDetailAction = (projectID) => {
                 }, 1000);
             }
         } catch (error) {
-            message.error(error.response.data.message);
+            if (error.response.data.message) message.error(error.response.data.message);
+            message.error("Đã bị lỗi");
             dispatch(setLoadingOffAction());
+            console.log("error: ", error);
+        }
+    };
+};
+export const updateStatusTaskInProjectAction = (taskUpdated) => {
+    return async (dispatch) => {
+        try {
+            const { data, status } = await projectService.updateTaskStatus(taskUpdated);
+        } catch (error) {
+            message.error(error.response.data.message);
             console.log("error: ", error);
         }
     };

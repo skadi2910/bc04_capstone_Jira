@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import HeaderProjectDetail from "./HeaderProjectDetail/HeaderProjectDetail";
 import background from "../../../assets/img/bgProjectDetail.jpg";
@@ -12,33 +12,61 @@ import {
     EditOutlined,
 } from "@ant-design/icons";
 import { message } from "antd";
-import { getProjectDetailAction } from "../../../redux/actions/ProjectAction";
+import {
+    editProjectDetailCreator,
+    getProjectDetailAction,
+    updateStatusTaskInProjectAction,
+} from "../../../redux/actions/ProjectAction";
 export default function ProjectDetail() {
     const { id } = useParams();
     const dispatch = useDispatch();
     const { projectDetail } = useSelector((state) => state.ProjectReducer);
-    // console.log('projectDetail: ', projectDetail);
     const { lstTask } = projectDetail;
-    console.log("lstTask: ", lstTask);
-    // console.log('lstTask: ', lstTask);
     useEffect(() => {
         dispatch(selectedKeyAction(key)); //! chinh key cho sidebar
         dispatch(getProjectDetailAction(id));
     }, []);
     const key = -1;
     const handleDragEnd = (result) => {
-        console.log("result: ", result);
+        const { source, destination } = result;
+        // ! start logic: loại trừ các trường hợp ngoại lệ 
+        if (!result.destination) return;
+        if (
+            source.index === destination.index &&
+            source.droppableId === destination.droppableId
+        )
+            return;
+        // ! end logic: loại trừ các trường hợp ngoại lệ 
+
+        // ! start logic: xử lý drag drop ở reducer trước để web mượt hơn
+        const originalProjectDetail = { ...projectDetail };
+        const sourceDroppableID = parseInt(result.source.droppableId) - 1;
+        const destinationDropableID = parseInt(result.destination.droppableId) - 1;
+        const [ItemVuaKeo] = originalProjectDetail.lstTask[
+            sourceDroppableID
+        ].lstTaskDeTail.splice(result.source.index, 1);
+        originalProjectDetail.lstTask[destinationDropableID].lstTaskDeTail.splice(
+            result.destination.index,
+            0,
+            ItemVuaKeo
+        );
+        dispatch(editProjectDetailCreator(originalProjectDetail));
+        // ! end logic: xử lý drag drop ở reducer trước để web mượt hơn
+
+        // !start logic: gửi dữ liệu lên API nhưng không hiển thị thông báo ở màn hình
+        const taskUpdated = {
+            taskId: result.draggableId,
+            statusId: destination.droppableId,
+        };
+        dispatch(updateStatusTaskInProjectAction(taskUpdated));
+        // !end logic: gửi dữ liệu lên API nhưng không hiển thị thông báo ở màn hình
     };
     const renderListTask = () => {
-        console.log(lstTask);
-
         return (
             <DragDropContext onDragEnd={handleDragEnd}>
                 {lstTask?.map((task, index) => {
                     return (
-                        <Droppable
-                            key={index}
-                            droppableId={task.statusId}>
+                        <Droppable key={index} droppableId={task.statusId}>
                             {(provided) => {
                                 return (
                                     <div className=" rounded-lg ">
@@ -156,370 +184,6 @@ export default function ProjectDetail() {
                 <HeaderProjectDetail />
                 <div className="grid grid-cols-4 gap-4 px-4 py-8 ">
                     {renderListTask()}
-                    {/* <div className="glassMorphismBackground rounded-lg ">
-                        <div className="task-header px-3 py-3">
-                            <div className="flex justify-between">
-                                <p className="text-sm lg:text-lg font-bold">Tên phần cần làm</p>
-                                <div className="pr-2">
-                                    <SmallDashOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="task-body bodyTaskGlassMorphismm text-black  font-semibold  px-3 py-2 mx-2 my-3">
-                            <div className="grid grid-cols-4 my-2">
-                                <div className="col-span-3">
-                                    <p className="text-xs  lg:text-base">Quản lý các dự án ( project management hoặc index )</p>
-                                </div>
-                                <div className="col-span-1 text-end pr-2">
-                                    <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                            <div className="flex justify-between mt-4">
-                                <div className="text-xs lg:text-base">Trạng thái</div>
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-                                            alt=""
-                                        />
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-                                            alt=""
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="task-body bodyTaskGlassMorphismm text-black  font-semibold  px-3 py-2 mx-2 my-3">
-                            <div className="grid grid-cols-4 my-2">
-                                <div className="col-span-3">
-                                    <p className="text-xs  lg:text-base">Quản lý các dự án ( project management hoặc index )</p>
-                                </div>
-                                <div className="col-span-1 text-end pr-2">
-                                    <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                            <div className="flex justify-between mt-4">
-                                <div className="text-xs lg:text-base">Trạng thái</div>
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-                                            alt=""
-                                        />
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-                                            alt=""
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="task-body bodyTaskGlassMorphismm text-black  font-semibold  px-3 py-2 mx-2 my-3">
-                            <div className="grid grid-cols-4 my-2">
-                                <div className="col-span-3">
-                                    <p className="text-xs  lg:text-base">Quản lý các dự án ( project management hoặc index )</p>
-                                </div>
-                                <div className="col-span-1 text-end pr-2">
-                                    <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                            <div className="flex justify-between mt-4">
-                                <div className="text-xs lg:text-base">Trạng thái</div>
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-                                            alt=""
-                                        />
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-                                            alt=""
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="glassMorphismBackground rounded-lg ">
-                        <div className="task-header px-3 py-3">
-                            <div className="flex justify-between">
-                                <p className="text-sm lg:text-lg font-bold">Tên phần cần làm</p>
-                                <div className="pr-2">
-                                    <SmallDashOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="task-body bodyTaskGlassMorphismm text-black  font-semibold  px-3 py-2 mx-2 my-3">
-                            <div className="grid grid-cols-4 my-2">
-                                <div className="col-span-3">
-                                    <p className="text-xs  lg:text-base">Quản lý các dự án ( project management hoặc index )</p>
-                                </div>
-                                <div className="col-span-1 text-end pr-2">
-                                    <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                            <div className="flex justify-between mt-4">
-                                <div className="text-xs lg:text-base">Trạng thái</div>
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-                                            alt=""
-                                        />
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-                                            alt=""
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="task-body bodyTaskGlassMorphismm text-black  font-semibold  px-3 py-2 mx-2 my-3">
-                            <div className="grid grid-cols-4 my-2">
-                                <div className="col-span-3">
-                                    <p className="text-xs  lg:text-base">Quản lý các dự án ( project management hoặc index )</p>
-                                </div>
-                                <div className="col-span-1 text-end pr-2">
-                                    <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                            <div className="flex justify-between mt-4">
-                                <div className="text-xs lg:text-base">Trạng thái</div>
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-                                            alt=""
-                                        />
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-                                            alt=""
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="task-body bodyTaskGlassMorphismm text-black  font-semibold  px-3 py-2 mx-2 my-3">
-                            <div className="grid grid-cols-4 my-2">
-                                <div className="col-span-3">
-                                    <p className="text-xs  lg:text-base">Quản lý các dự án ( project management hoặc index )</p>
-                                </div>
-                                <div className="col-span-1 text-end pr-2">
-                                    <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                            <div className="flex justify-between mt-4">
-                                <div className="text-xs lg:text-base">Trạng thái</div>
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-                                            alt=""
-                                        />
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-                                            alt=""
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="glassMorphismBackground rounded-lg ">
-                        <div className="task-header px-3 py-3">
-                            <div className="flex justify-between">
-                                <p className="text-sm lg:text-lg font-bold">Tên phần cần làm</p>
-                                <div className="pr-2">
-                                    <SmallDashOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="task-body bodyTaskGlassMorphismm text-black  font-semibold  px-3 py-2 mx-2 my-3">
-                            <div className="grid grid-cols-4 my-2">
-                                <div className="col-span-3">
-                                    <p className="text-xs  lg:text-base">Quản lý các dự án ( project management hoặc index )</p>
-                                </div>
-                                <div className="col-span-1 text-end pr-2">
-                                    <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                            <div className="flex justify-between mt-4">
-                                <div className="text-xs lg:text-base">Trạng thái</div>
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-                                            alt=""
-                                        />
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-                                            alt=""
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="task-body bodyTaskGlassMorphismm text-black  font-semibold  px-3 py-2 mx-2 my-3">
-                            <div className="grid grid-cols-4 my-2">
-                                <div className="col-span-3">
-                                    <p className="text-xs  lg:text-base">Quản lý các dự án ( project management hoặc index )</p>
-                                </div>
-                                <div className="col-span-1 text-end pr-2">
-                                    <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                            <div className="flex justify-between mt-4">
-                                <div className="text-xs lg:text-base">Trạng thái</div>
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-                                            alt=""
-                                        />
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-                                            alt=""
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="task-body bodyTaskGlassMorphismm text-black  font-semibold  px-3 py-2 mx-2 my-3">
-                            <div className="grid grid-cols-4 my-2">
-                                <div className="col-span-3">
-                                    <p className="text-xs  lg:text-base">Quản lý các dự án ( project management hoặc index )</p>
-                                </div>
-                                <div className="col-span-1 text-end pr-2">
-                                    <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                            <div className="flex justify-between mt-4">
-                                <div className="text-xs lg:text-base">Trạng thái</div>
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-                                            alt=""
-                                        />
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-                                            alt=""
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="glassMorphismBackground rounded-lg ">
-                        <div className="task-header px-3 py-3">
-                            <div className="flex justify-between">
-                                <p className="text-sm lg:text-lg font-bold">Tên phần cần làm</p>
-                                <div className="pr-2">
-                                    <SmallDashOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="task-body bodyTaskGlassMorphismm text-black  font-semibold  px-3 py-2 mx-2 my-3">
-                            <div className="grid grid-cols-4 my-2">
-                                <div className="col-span-3">
-                                    <p className="text-xs  lg:text-base">Quản lý các dự án ( project management hoặc index )</p>
-                                </div>
-                                <div className="col-span-1 text-end pr-2">
-                                    <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                            <div className="flex justify-between mt-4">
-                                <div className="text-xs lg:text-base">Trạng thái</div>
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-                                            alt=""
-                                        />
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-                                            alt=""
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="task-body bodyTaskGlassMorphismm text-black  font-semibold  px-3 py-2 mx-2 my-3">
-                            <div className="grid grid-cols-4 my-2">
-                                <div className="col-span-3">
-                                    <p className="text-xs  lg:text-base">Quản lý các dự án ( project management hoặc index )</p>
-                                </div>
-                                <div className="col-span-1 text-end pr-2">
-                                    <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                            <div className="flex justify-between mt-4">
-                                <div className="text-xs lg:text-base">Trạng thái</div>
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-                                            alt=""
-                                        />
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-                                            alt=""
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="task-body bodyTaskGlassMorphismm text-black  font-semibold  px-3 py-2 mx-2 my-3">
-                            <div className="grid grid-cols-4 my-2">
-                                <div className="col-span-3">
-                                    <p className="text-xs  lg:text-base">Quản lý các dự án ( project management hoặc index )</p>
-                                </div>
-                                <div className="col-span-1 text-end pr-2">
-                                    <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
-                                </div>
-                            </div>
-                            <div className="flex justify-between mt-4">
-                                <div className="text-xs lg:text-base">Trạng thái</div>
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-                                            alt=""
-                                        />
-                                        <img
-                                            className=" w-100 h-4 w-4 lg:h-8 lg:w-8 rounded-full "
-                                            src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-                                            alt=""
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
                 </div>
             </div>
         </div>

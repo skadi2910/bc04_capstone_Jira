@@ -6,7 +6,9 @@ export class ProjectService extends baseService {
     getProjectDetail = (projectID) => {
         return this.get(`/api/Project/getProjectDetail?id=${projectID}`)
     }
-
+    updateTaskStatus = (taskUpdated) => {
+        return this.put(`/api/Project/updateStatus`, taskUpdated)
+    }
 }
 
 export const projectService = new ProjectService();
