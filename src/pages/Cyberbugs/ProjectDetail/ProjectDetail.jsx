@@ -70,7 +70,7 @@ export default function ProjectDetail() {
                         <Droppable key={index} droppableId={task.statusId}>
                             {(provided) => {
                                 return (
-                                    <div className="rounded-lg  ">
+                                    <div className="rounded-lg cursor-pointer ">
                                         <div className="task-header glassMorphismBackground px-3 py-3 min-h-[3.5rem] lg:min-h-[5rem] ">
                                             <div className="flex justify-between">
                                                 <p className="text-xs lg:text-base 2xl:text-lg font-bold">

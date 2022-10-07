@@ -7,6 +7,7 @@ import EditUser from "./EditUser/EditUser";
 
 export default function TableComponent() {
     const { userList: data } = useSelector((state) => state.UserReducer); //! destructuring + đặt tên
+    console.log('data: ', data);
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getUserListAction("")); //! khi user click vào thì lấy list user về render ra giao diện
@@ -21,19 +22,21 @@ export default function TableComponent() {
     }
     const columns = [
         {
-            title: <p className="mx-8">Email</p>,
-            width: 250,
-            dataIndex: "email",
-            key: "email",
+            title: <p className="ml-4">Tên</p>,
+            width: 100,
+            align: "left",
+            dataIndex: "name",
+            key: "name",
             fixed: "left",
             render: (text, record, index) => {
                 return (
                     <div>
-                        <p className="mx-8">{text}</p>
+                        <p className="ml-4 ">{text}</p>
                     </div>
                 );
             },
         },
+
         {
             title: "ID",
             width: 100,
@@ -106,5 +109,6 @@ export default function TableComponent() {
                 y: 600,
             }}
         />
+
     );
 }

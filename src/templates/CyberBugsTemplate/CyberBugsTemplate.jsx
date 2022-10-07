@@ -54,7 +54,7 @@ export default function CyberBugsTemplate(props) {
     const { Component } = props;
     return (
 
-        <div className="jira "
+        <div className="jira overflow-x-hidden"
         >
             <SidebarCyberbugs />
 

@@ -19,12 +19,11 @@ export default function UserManagement() {
         dispatch(selectedKeyAction(key)); //! chinh key cho sidebar
     }, []);
     const handleAddUser = () => {
-        // dispatch(openModalAction(<Signup />));
         navigate("/usermanagement/createuser");
     }
     return (
-        <div className='w-full flex justify-center'>
-            <div className="container">
+        <div className='w-full flex justify-center '>
+            <div className="container ">
                 <div className="px-4">
                     <button
                         onClick={handleAddUser}

@@ -10,7 +10,7 @@ import { Button } from "@tsamantanis/react-glassmorphism";
 import "@tsamantanis/react-glassmorphism/dist/index.css";
 import { CustomCard } from "@tsamantanis/react-glassmorphism";
 import ButtonToggleActive from "./ButtonToggleActive";
-import { message } from "antd";
+import { message, Popconfirm } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useMediaQuery } from 'react-responsive'
 import { useSelector } from "react-redux";
@@ -98,8 +98,27 @@ export default function HeaderProjectDetail({ members, projectName }) {
                 }
             })
         }
-
         setResult(res);
+    };
+    const [open, setOpen] = useState(false);
+    const [confirmLoading, setConfirmLoading] = useState(false);
+
+    const showPopconfirm = () => {
+        setOpen(true);
+    };
+
+    const handleOk = () => {
+        setConfirmLoading(true);
+        setTimeout(() => {
+            setOpen(false);
+            setConfirmLoading(false);
+            navigate("/usermanagement");
+        }, 1000);
+    };
+
+    const handleCancel = () => {
+        console.log('Clicked cancel button');
+        setOpen(false);
     };
     return (
         //  <div className="w-full flex justify-center">
@@ -152,9 +171,7 @@ export default function HeaderProjectDetail({ members, projectName }) {
                             onSubmit={(event) => {
                                 event.preventDefault();
                                 const { value } = event.target;
-                                console.log('value: ', value);
-                                message.success("Chi tiết người dùng đang được phát triển");
-                                // handleSearch();
+                                handleOk();
                             }}
                             className="flex border-2 rounded mx-2"
                         >
@@ -170,9 +187,8 @@ export default function HeaderProjectDetail({ members, projectName }) {
                                 onSearch={handleSearch}
                                 placeholder="Tìm thành viên trong dự án"
                                 onSelect={(event) => {
-                                    // console.log(event);
-                                    // console.log("");
-                                    message.success("Chức năng tìm kiếm người dùng đang được phát triển, bạn có muốn quản lý người dùng ?")
+                                    // handleConfirm();
+                                    // confirm();
                                 }}
                             >
                                 {result.map((email) => (
@@ -181,17 +197,27 @@ export default function HeaderProjectDetail({ members, projectName }) {
                                     </Option>
                                 ))}
                             </AutoComplete>
-
-
-
-
-
-                            <button
-                                type="submit"
-                                className=" items-center justify-center px-4 border-l hidden lg:flex custom-hover-icon"
+                            <Popconfirm
+                                title="Chức năng xem chi tiết đang được xây dựng, bạn có muốn quản lý người dùng ?"
+                                open={open}
+                                onConfirm={handleOk}
+                                okButtonProps={{
+                                    loading: confirmLoading,
+                                    className: "bg-blue-500 hover:bg-blue-700 border-none px-4"
+                                }}
+                                onCancel={handleCancel}
                             >
-                                <SearchOutlined />
-                            </button>
+                                <button
+                                    type="submit"
+                                    onClick={showPopconfirm}
+                                    className=" items-center justify-center px-4 border-l hidden lg:flex custom-hover-icon"
+                                >
+                                    <SearchOutlined />
+                                </button>
+                            </Popconfirm>
+
+
+
                         </form>
                     </div>
                 </div>
