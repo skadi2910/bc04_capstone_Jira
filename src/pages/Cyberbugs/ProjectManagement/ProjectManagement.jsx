@@ -9,6 +9,8 @@ export default function ProjectManagement() {
         dispatch(selectedKeyAction(key)); //! chinh key cho sidebar
     }, [])
     return (
-        <div>ProjectManagement</div>
+        <div>
+            ProjectManagement
+        </div>
     )
 }

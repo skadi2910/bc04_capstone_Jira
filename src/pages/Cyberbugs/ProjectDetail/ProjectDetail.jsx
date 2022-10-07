@@ -70,7 +70,7 @@ export default function ProjectDetail() {
                         <Droppable key={index} droppableId={task.statusId}>
                             {(provided) => {
                                 return (
-                                    <div className="rounded-lg cursor-pointer ">
+                                    <div className="rounded-lg cursor-pointer custom-scrollbar">
                                         <div className="task-header glassMorphismBackground px-3 py-3 min-h-[3.5rem] lg:min-h-[5rem] ">
                                             <div className="flex justify-between">
                                                 <p className="text-xs lg:text-base 2xl:text-lg font-bold">
@@ -92,7 +92,7 @@ export default function ProjectDetail() {
                                                 height: "calc(100vh  - 13rem)",
                                             }}
                                             // h-[40rem]
-                                            className=" overflow-y-auto overflow-x-hidden"
+                                            className=" overflow-y-auto overflow-x-hidden "
                                             {...provided.droppableProps}
                                             ref={provided.innerRef}
                                             key={index.toString() + task.statusId}
@@ -131,7 +131,7 @@ export default function ProjectDetail() {
                                                                 {...provided.dragHandleProps}
                                                                 ref={provided.innerRef}
                                                                 className="task-body bodyTaskGlassMorphismm rounded-md  text-black  font-semibold  px-4 py-2  mx-2 my-3
-                                                               
+
                                                                 "
                                                             >
                                                                 <div className="grid grid-cols-4 my-2">
