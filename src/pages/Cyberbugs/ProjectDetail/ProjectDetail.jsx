@@ -17,17 +17,17 @@ import {
     getProjectDetailAction,
     updateStatusTaskInProjectAction,
 } from "../../../redux/actions/ProjectAction";
-import Scrollbars from "react-custom-scrollbars";
 export default function ProjectDetail() {
     const { id } = useParams();
     const dispatch = useDispatch();
     const { projectDetail } = useSelector((state) => state.ProjectReducer);
-    const { lstTask } = projectDetail;
+    console.log('projectDetail: ', projectDetail);
+    const { lstTask, projectName } = projectDetail;
     useEffect(() => {
         dispatch(selectedKeyAction(key)); //! chinh key cho sidebar
-        dispatch(getProjectDetailAction(id));
+        dispatch(getProjectDetailAction(id)); //! gọi API lấy dữ liệu project detail
     }, []);
-    const key = -1;
+    const key = -1; //! key để sidebar tự động update thứ tự
     const handleDragEnd = (result) => {
         const { source, destination } = result;
         // ! start logic: loại trừ các trường hợp ngoại lệ
@@ -68,7 +68,6 @@ export default function ProjectDetail() {
                 {lstTask?.map((task, index) => {
                     return (
                         <Droppable key={index} droppableId={task.statusId}>
-
                             {(provided) => {
                                 return (
                                     <div className="rounded-lg  ">
@@ -77,7 +76,12 @@ export default function ProjectDetail() {
                                                 <p className="text-xs lg:text-base 2xl:text-lg font-bold">
                                                     {task.statusName}
                                                 </p>
-                                                <div className="pr-2">
+                                                <div
+                                                    className="pr-2"
+                                                    onClick={() => {
+                                                        message.success("Chức năng đang được xây dựng");
+                                                    }}
+                                                >
                                                     <SmallDashOutlined className="custom-hover-icon p-2 rounded-lg" />
                                                 </div>
                                             </div>
@@ -85,10 +89,10 @@ export default function ProjectDetail() {
                                         {/* height: "calc(100vh  - 13rem)", */}
                                         <ul
                                             style={{
-                                                height: "calc(100vh  - 13rem)"
+                                                height: "calc(100vh  - 13rem)",
                                             }}
                                             // h-[40rem]
-                                            className=" overflow-y-auto "
+                                            className=" overflow-y-auto overflow-x-hidden"
                                             {...provided.droppableProps}
                                             ref={provided.innerRef}
                                             key={index.toString() + task.statusId}
@@ -136,7 +140,15 @@ export default function ProjectDetail() {
                                                                             {taskDetail.taskName}
                                                                         </p>
                                                                     </div>
-                                                                    <div className="col-span-1 text-end pr-2">
+                                                                    <div
+                                                                        className="col-span-1 text-end pr-2
+                                                                    "
+                                                                        onClick={() => {
+                                                                            message.info(
+                                                                                "Chỗ này tạo chức năng edit Task"
+                                                                            );
+                                                                        }}
+                                                                    >
                                                                         <EditOutlined className="custom-hover-icon p-2 rounded-lg" />
                                                                     </div>
                                                                 </div>
@@ -170,7 +182,6 @@ export default function ProjectDetail() {
                                             })}
                                             {provided.placeholder}
                                         </ul>
-
                                     </div>
                                 );
                             }}
@@ -191,7 +202,9 @@ export default function ProjectDetail() {
                 }}
                 className="h-screen text-white"
             >
-                <HeaderProjectDetail />
+                <HeaderProjectDetail members={projectDetail.members}
+                    projectName={projectName}
+                />
                 <div className="grid grid-cols-4 gap-4 px-4 py-8 ">
                     {renderListTask()}
                 </div>

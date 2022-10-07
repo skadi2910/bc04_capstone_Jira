@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import {
     BarChartOutlined,
     CaretDownOutlined,
@@ -12,13 +12,94 @@ import { CustomCard } from "@tsamantanis/react-glassmorphism";
 import ButtonToggleActive from "./ButtonToggleActive";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
-export default function HeaderProjectDetail() {
+import { useMediaQuery } from 'react-responsive'
+import { useSelector } from "react-redux";
+import { AutoComplete } from 'antd';
+const { Option } = AutoComplete;
+export default function HeaderProjectDetail({ members, projectName }) {
+    const { creator } = useSelector(state => state.ProjectReducer);
+    const [result, setResult] = useState([]);
+    // console.log('creator: ', creator);
+    const isDesktopOrLaptop = useMediaQuery({
+        query: '(min-width: 1224px)'
+    })
+    const isBigScreen = useMediaQuery({ query: '(min-width: 1824px)' })
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+    const isPortrait = useMediaQuery({ query: '(orientation: portrait)' })
+    const isRetina = useMediaQuery({ query: '(min-resolution: 2dppx)' })
     const [active, setActive] = useState("");
     const navigate = useNavigate();
     const toggleClass = (event) => {
         // setActive
         const { id } = event.target;
         setActive(id);
+    };
+    // console.log('members: ', members);
+
+    const renderMemberInProject = () => {
+        //! nếu mảng member lớn hơn 2 thì đối với màn hình laptop nhỏ và ipad sẽ lấy 2 và dấu ... màn lớn sẽ lấy 12 member
+        // if (members.length > 2) {
+        //     const membersForSmallLaptop = members.slice(0, 2);
+        //     const membersForBigLaptop = members.slice(0, 12);
+        // }
+
+        const renderForTablet = () => {
+            return (
+                <>
+                    {
+                        members?.slice(0, 2).map((member, index) => {
+                            return (
+                                <Fragment>
+                                    <img
+                                        className="w-100 h-8 w-8 rounded-full  mx-1"
+                                        src={member.avatar}
+                                        alt=""
+                                    />
+                                </Fragment>
+                            )
+                        })
+                    }
+                    <p className="cursor-default" >...</p>
+                </>
+            )
+        }
+        return (
+            <>
+                {isDesktopOrLaptop && members?.slice(0, 12).map((member, index) => {
+                    return (
+                        <Fragment>
+                            <img
+                                className="w-100 h-8 w-8 rounded-full   mx-1"
+                                src={member.avatar}
+                                alt=""
+                            />
+                        </Fragment>
+                    )
+                })}
+
+                {isTabletOrMobile && renderForTablet()}
+                {/* {isDesktopOrLaptop && renderForTablet()} */}
+            </>
+
+
+
+        )
+    }
+    const handleSearch = (value) => {
+        value = value.trim();
+        let res = [];
+        if (!value || value.indexOf('@') >= 0) {
+            res = [];
+        } else {
+            // ! ==> chạy vòng lặp
+            members.forEach((member, index) => {
+                if (member.name.toLowerCase().includes(value.toLowerCase())) {
+                    res.push(member.name);
+                }
+            })
+        }
+
+        setResult(res);
     };
     return (
         //  <div className="w-full flex justify-center">
@@ -29,7 +110,7 @@ export default function HeaderProjectDetail() {
                     {/* <div>LOGO</div> */}
                     <BarChartOutlined className="text-3xl hidden lg:block" />
                     <h1 className="text-white font-bold ml-0  lg:ml-1 text-lg mr-2 lg:mr-0 lg:text-2xl cursor-default">
-                        Tên dự án
+                        Jira
                     </h1>
                 </div>
                 <button
@@ -70,15 +151,41 @@ export default function HeaderProjectDetail() {
                         <form
                             onSubmit={(event) => {
                                 event.preventDefault();
-                                message.info("Tạo chức năng search");
+                                const { value } = event.target;
+                                console.log('value: ', value);
+                                message.success("Chi tiết người dùng đang được phát triển");
+                                // handleSearch();
                             }}
                             className="flex border-2 rounded mx-2"
                         >
-                            <input
+                            {/* <input
                                 type="text"
                                 className="px-4 py-2 w-80 searchInput "
                                 placeholder="Search..."
-                            />
+                            /> */}
+                            <AutoComplete
+                                style={{
+                                    width: 200,
+                                }}
+                                onSearch={handleSearch}
+                                placeholder="Tìm thành viên trong dự án"
+                                onSelect={(event) => {
+                                    // console.log(event);
+                                    // console.log("");
+                                    message.success("Chức năng tìm kiếm người dùng đang được phát triển, bạn có muốn quản lý người dùng ?")
+                                }}
+                            >
+                                {result.map((email) => (
+                                    <Option key={email} value={email}>
+                                        {email}
+                                    </Option>
+                                ))}
+                            </AutoComplete>
+
+
+
+
+
                             <button
                                 type="submit"
                                 className=" items-center justify-center px-4 border-l hidden lg:flex custom-hover-icon"
@@ -91,20 +198,10 @@ export default function HeaderProjectDetail() {
                 <div>
                     <div
                         className="flex items-center gap-2"
-                        onClick={() => {
-                            message.info("Tạo chức năng thêm người dùng vào project");
-                        }}
                     >
-                        <img
-                            className="w-100 h-8 w-8 rounded-full cursor-pointer  mx-2"
-                            src="https://previews.123rf.com/images/julos/julos1607/julos160748874/81852983-cartoon-character-of-letter-m.jpg"
-                            alt=""
-                        />
-                        <img
-                            className="w-100 h-8 w-8 rounded-full cursor-pointer  mx-2"
-                            src="https://image.shutterstock.com/image-vector/cute-red-letter-h-all-260nw-2208761553.jpg"
-                            alt=""
-                        />
+                        {renderMemberInProject()}
+
+
                     </div>
                 </div>
                 <div>
@@ -113,21 +210,20 @@ export default function HeaderProjectDetail() {
                             console.log(message.success("Chức năng đang được phát triển"));
                         }}
                     >
-                        <ShareAltOutlined className="text-3xl cursor-pointer  mx-2" />
+                        <ShareAltOutlined className="text-3xl cursor-pointer mx-2" />
                     </button>
                 </div>
                 <div className="flex items-center">
-                    <button
-                        onClick={() => {
-                            console.log(message.success("Chức năng đang được phát triển"));
-                        }}
+                    <span
+
+                        className=" border-blue-300 border-4 rounded-full"
                     >
                         <img
-                            className="w-100 h-8 w-8 rounded-full cursor-pointer"
-                            src="https://thumbs.dreamstime.com/b/single-character-t-font-orange-yellow-color-alphabet-red-wall-design-illustration-red-maroon-colour-95737449.jpg"
+                            className="w-100 h-8 w-8 rounded-full "
+                            src={`${creator?.avatar}`}
                             alt=""
                         />
-                    </button>
+                    </span>
                 </div>
             </div>
         </div>

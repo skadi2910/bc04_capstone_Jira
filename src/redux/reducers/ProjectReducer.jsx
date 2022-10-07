@@ -1,7 +1,8 @@
-import { EDIT_PROJECT_DETAIL, GET_PROJECT_DETAIL } from "../actions/types/ProjectTypes"
+import { EDIT_PROJECT_DETAIL, GET_CREATOR_AVATAR, GET_PROJECT_DETAIL } from "../actions/types/ProjectTypes"
 
 const initialState = {
-    projectDetail: {}
+    projectDetail: {},
+    creator: {}
 }
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -12,6 +13,10 @@ export default (state = initialState, action) => {
             const { arrayEdited } = action;
             console.log('arrayEdited: ', arrayEdited);
             return { ...state, projectDetail: arrayEdited }
+        }
+        case GET_CREATOR_AVATAR: {
+            const { creator } = action;
+            return { ...state, creator }
         }
         default:
             return state
