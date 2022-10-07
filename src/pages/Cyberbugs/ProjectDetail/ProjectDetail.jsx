@@ -17,6 +17,7 @@ import {
     getProjectDetailAction,
     updateStatusTaskInProjectAction,
 } from "../../../redux/actions/ProjectAction";
+import Scrollbars from "react-custom-scrollbars";
 export default function ProjectDetail() {
     const { id } = useParams();
     const dispatch = useDispatch();
@@ -29,14 +30,14 @@ export default function ProjectDetail() {
     const key = -1;
     const handleDragEnd = (result) => {
         const { source, destination } = result;
-        // ! start logic: loại trừ các trường hợp ngoại lệ 
+        // ! start logic: loại trừ các trường hợp ngoại lệ
         if (!result.destination) return;
         if (
             source.index === destination.index &&
             source.droppableId === destination.droppableId
         )
             return;
-        // ! end logic: loại trừ các trường hợp ngoại lệ 
+        // ! end logic: loại trừ các trường hợp ngoại lệ
 
         // ! start logic: xử lý drag drop ở reducer trước để web mượt hơn
         const originalProjectDetail = { ...projectDetail };
@@ -44,7 +45,7 @@ export default function ProjectDetail() {
         const destinationDropableID = parseInt(result.destination.droppableId) - 1;
         const [ItemVuaKeo] = originalProjectDetail.lstTask[
             sourceDroppableID
-        ].lstTaskDeTail.splice(result.source.index, 1);
+        ].lstTaskDeTail.splice(result.source.index, 1); //! cấu trúc destructuring array
         originalProjectDetail.lstTask[destinationDropableID].lstTaskDeTail.splice(
             result.destination.index,
             0,
@@ -67,9 +68,10 @@ export default function ProjectDetail() {
                 {lstTask?.map((task, index) => {
                     return (
                         <Droppable key={index} droppableId={task.statusId}>
+
                             {(provided) => {
                                 return (
-                                    <div className=" rounded-lg ">
+                                    <div className="rounded-lg  ">
                                         <div className="task-header glassMorphismBackground px-3 py-3 min-h-[3.5rem] lg:min-h-[5rem] ">
                                             <div className="flex justify-between">
                                                 <p className="text-xs lg:text-base 2xl:text-lg font-bold">
@@ -80,8 +82,13 @@ export default function ProjectDetail() {
                                                 </div>
                                             </div>
                                         </div>
+                                        {/* height: "calc(100vh  - 13rem)", */}
                                         <ul
-                                            className="h-full"
+                                            style={{
+                                                height: "calc(100vh  - 13rem)"
+                                            }}
+                                            // h-[40rem]
+                                            className=" overflow-y-auto "
                                             {...provided.droppableProps}
                                             ref={provided.innerRef}
                                             key={index.toString() + task.statusId}
@@ -119,7 +126,9 @@ export default function ProjectDetail() {
                                                                 {...provided.draggableProps}
                                                                 {...provided.dragHandleProps}
                                                                 ref={provided.innerRef}
-                                                                className="task-body bodyTaskGlassMorphismm rounded-md  text-black  font-semibold  px-4 py-2  mx-2 my-3"
+                                                                className="task-body bodyTaskGlassMorphismm rounded-md  text-black  font-semibold  px-4 py-2  mx-2 my-3
+                                                               
+                                                                "
                                                             >
                                                                 <div className="grid grid-cols-4 my-2">
                                                                     <div className="col-span-3">
@@ -161,6 +170,7 @@ export default function ProjectDetail() {
                                             })}
                                             {provided.placeholder}
                                         </ul>
+
                                     </div>
                                 );
                             }}
