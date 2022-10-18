@@ -1,8 +1,8 @@
-import { DISPLAY_LOADING, HIDE_LOADING } from "./types/LoadingTypes"
+import { DISPLAY_LOADING, HIDE_LOADING } from "./constants/LoadingConstant";
 
 export const setLoadingOnAction = () => ({
-    type: DISPLAY_LOADING
-})
+  type: DISPLAY_LOADING,
+});
 export const setLoadingOffAction = () => ({
-    type: HIDE_LOADING
-})
+  type: HIDE_LOADING,
+});

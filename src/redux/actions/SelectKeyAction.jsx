@@ -1,6 +1,6 @@
-import { SELECT_KEY } from "./types/SelectedKeyTypes";
+import { SELECT_KEY } from "./constants/SelectedKeyConstant";
 
 export const selectedKeyAction = (key) => ({
-    type: SELECT_KEY,
-    key
-})
+  type: SELECT_KEY,
+  key,
+});
