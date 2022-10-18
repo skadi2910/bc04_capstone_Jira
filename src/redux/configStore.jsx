@@ -17,9 +17,4 @@ import { ProjectListReducer } from "./reducers/ProjectListReducer";
 const rootReducer = combineReducers({
   LoadingReducer,
   SelectedKeyReducer,
-  ProjectListReducer,
-
-  projectDetailReducer: ProjectDetailSlice,
 });
-// ConfigureStore có sẵn redux_thunk && redux_devtools
-export const store = configureStore({ reducer: rootReducer });

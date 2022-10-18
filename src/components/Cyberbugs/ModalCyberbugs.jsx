@@ -1,26 +1,33 @@
-import { Button, Modal } from 'antd';
-import React, { useState } from 'react';
+import { Button, Modal } from "antd";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { closeModalAction } from "../../redux/actions/ModalAction";
 export default function ModalCyberbugs() {
-    const [open, setOpen] = useState(false);
-    return (
-        <>
-            {/*
+  const { modalState, defaultComponent } = useSelector(
+    (state) => state.ModalReducer
+  );
+  const dispatch = useDispatch();
+  return (
+    <>
+      {/*
             //! nút mở modal nếu có dùng
             <Button type="primary" onClick={() => setOpen(!open)}>
                 Open Modal of 1000px width
             </Button> */}
-            <Modal
-                title="Modal 1000px width"
-                centered
-                open={open}
-                onOk={() => setOpen(false)}
-                onCancel={() => setOpen(false)}
-                width={1000}
-            >
-                <p>some contents...</p>
-                <p>some contents...</p>
-                <p>some contents...</p>
-            </Modal>
-        </>
-    )
+      <Modal
+        centered
+        open={modalState}
+        // onOk={() => {
+        //     dispatch(closeModalAction());
+        // }}
+        onCancel={() => {
+          dispatch(closeModalAction());
+        }}
+        width={1000}
+        footer={null}
+      >
+        {defaultComponent}
+      </Modal>
+    </>
+  );
 }
