@@ -28,9 +28,19 @@
 
 .custom-scrollbar ::-webkit-scrollbar-thumb {
   background: rgb(34, 193, 195);
-  background: linear-gradient(0deg, rgba(34, 193, 195, 1) 0%, rgba(253, 187, 45, 1) 100%);
+  background: linear-gradient(
+    0deg,
+    rgba(34, 193, 195, 1) 0%,
+    rgba(253, 187, 45, 1) 100%
+  );
   border-radius: 50px;
   box-shadow: 23px 23px 73px rgb(34, 193, 195),
     -23px -23px 73px rgb(34, 193, 195);
-  ;
 }
+/* .ant-table-body {
+  overflow-y: hidden !important;
+}
+
+.ant-table-body:hover {
+  overflow-y: scroll !important;
+} */

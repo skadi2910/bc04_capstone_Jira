@@ -1,9 +1,10 @@
+@import "~antd/dist/antd.css";
 .jira {
   /* height: 100vh; */
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 300;
   display: flex;
-  height: 100vh
+  height: 100vh;
 }
 
 /* Sider Bar */
@@ -429,7 +430,7 @@
 
 .estimate-hours {
   height: 35px;
-  background: #F2F3F7;
+  background: #f2f3f7;
   margin-bottom: 20px;
   border: 1px solid;
   border-color: #ced4da;

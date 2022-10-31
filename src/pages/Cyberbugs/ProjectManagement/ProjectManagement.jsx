@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import LoadingCircle from "../../../components/Loading/LoadingCircle";
-import ProjectTable from "../../../components/Projects/ProjectTable";
+import { useDispatch } from "react-redux";
+import ProjectTable from "../../../components/Tables/ProjectTable";
 import { fetchProjectListData } from "../../../redux/actions/ProjectListAction";
 import { selectedKeyAction } from "../../../redux/actions/SelectKeyAction";
 
@@ -14,24 +13,13 @@ export default function ProjectManagement() {
     // dispatch lấy Project data từ API
     dispatch(fetchProjectListData());
   }, [dispatch]);
-  const { isLoading, projectList } = useSelector(
-    (state) => state.ProjectListReducer
-  );
 
-  const renderProjectList = () => {
-    return isLoading === true ? (
-      <LoadingCircle />
-    ) : (
-      <div className="outline-blue-500">
-        <ProjectTable className="outline-green-500" data={projectList} />
-      </div>
-    );
-  };
   return (
-    <div>
-      <div className="container mx-auto h-48 outline-red-500 px-20">
-        {renderProjectList()}
-      </div>
+    <div className="container xl:mx-auto xl:w-full lg:w-11/12 lg:mx-auto custom-scrollbar min-h-48 overflow-auto">
+      <h3 className="text-start ml-5 mt-2 font-bold text-2xl">
+        Project Management
+      </h3>
+      <ProjectTable />
     </div>
   );
 }

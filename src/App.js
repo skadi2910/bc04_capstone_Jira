@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+
 import "./App.css";
 import "./styles/customCss/allStyle.jsx";
 import Home from "./components/Cyberbugs/Home";
@@ -23,16 +24,16 @@ import Updating from "./pages/Cyberbugs/Updating/Updating";
 export const history = createBrowserHistory({ window });
 function App() {
   const isTabletOrLaptop = useMediaQuery({
-    query: '(min-width: 767px)'
-  })
-  const isBigScreen = useMediaQuery({ query: '(min-width: 1824px)' })
-  const isMobile = useMediaQuery({ query: '(max-width: 480px)' })
+    query: "(min-width: 767px)",
+  });
+  const isBigScreen = useMediaQuery({ query: "(min-width: 1824px)" });
+  const isMobile = useMediaQuery({ query: "(max-width: 480px)" });
   return (
     <>
       <Loading />
       <HistoryRouter history={history}>
         {isMobile && <Updating />}
-        {isTabletOrLaptop &&
+        {isTabletOrLaptop && (
           <Routes>
             <Route
               path="/"
@@ -60,9 +61,12 @@ function App() {
             />
 
             <Route path="/login" element={<UserTemplate Component={Login} />} />
-            <Route path="/signup" element={<UserTemplate Component={Signup} />} />
+            <Route
+              path="/signup"
+              element={<UserTemplate Component={Signup} />}
+            />
           </Routes>
-        }
+        )}
       </HistoryRouter>
     </>
   );
