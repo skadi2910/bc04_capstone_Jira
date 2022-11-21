@@ -82,7 +82,7 @@ export default function ProjectDetail() {
               {(provided) => {
                 return (
                   //glassMorphismBackground custom-scrollbar
-                  <div className="rounded-lg overflow-hidden bg-gray-200 border-2 border-red-400 ">
+                  <div className="rounded-lg overflow-hidden bg-gray-200  ">
                     <div className="task-header  px-3 mt-3 rounded-md min-h-[1rem] lg:min-h-[2rem] ">
                       <div className="flex justify-between">
                         <p className="text-xs lg:text-sm 2xl:text-md  text-gray-500">

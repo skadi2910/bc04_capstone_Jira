@@ -7,7 +7,7 @@ export const UserService = {
   //     return this.post(`/api/Users/signup`, signupInfo);
   // };
   getUserList: (userName) => {
-    return baseService.get(`/api/Users/getUser?keyword=${userName}`);
+    return baseService.get(`api/Users/getUser?keyword=${userName}`);
   },
   deleteUser: (userID) => {
     return baseService.delete(`api/Users/deleteUser?id=${userID}`);

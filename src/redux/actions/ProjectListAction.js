@@ -62,7 +62,6 @@ export const createProjectAction = (projectDetail) => {
     } catch (error) {
       if (error.response) {
         let { message: errMessage } = error.response.data;
-
         message.error(errMessage, 2);
       }
     }
